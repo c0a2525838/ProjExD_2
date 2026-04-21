@@ -14,15 +14,12 @@ DELTA = {
 }
 
 def check_bound(rct: pg.Rect):
-    
     yoko = True
     tate = True
-
     if rct.left < 0 or rct.right > WIDTH:
         yoko = False
     if rct.top < 0 or rct.bottom > HEIGHT:
         tate = False
-
     return yoko, tate
 
 
@@ -77,14 +74,18 @@ def main():
         
         bb_rct.move_ip(vx, vy)
 
-        
         yoko, tate = check_bound(bb_rct)
         if not yoko:
             vx *= -1
         if not tate:
             vy *= -1
 
+        
         screen.blit(bb_img, bb_rct)
+
+        
+        if kk_rct.colliderect(bb_rct):
+            return  
 
         pg.display.update()
         tmr += 1
