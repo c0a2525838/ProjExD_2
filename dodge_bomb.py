@@ -1,7 +1,6 @@
 import os
 import sys
 import pygame as pg
-import random
 
 WIDTH, HEIGHT = 1100, 650
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -23,14 +22,7 @@ def main():
     kk_rct.center = 300, 200
     clock = pg.time.Clock()
     tmr = 0
-    bb_img = pg.Surface((20, 20))  
-    bb_img.set_colorkey((0, 0, 0))  
-    pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)  
 
-    bb_rct = bb_img.get_rect()
-    bb_rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)  
-
-    vx, vy = +5, +5  
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -49,17 +41,6 @@ def main():
 
         kk_rct.move_ip(sum_mv)
         screen.blit(kk_img, kk_rct)
-         
-        bb_rct.move_ip(vx, vy)
-
-        
-        if bb_rct.left < 0 or bb_rct.right > WIDTH:
-            vx *= -1
-        if bb_rct.top < 0 or bb_rct.bottom > HEIGHT:
-            vy *= -1
-
-        
-        screen.blit(bb_img, bb_rct)
 
         pg.display.update()
         tmr += 1
