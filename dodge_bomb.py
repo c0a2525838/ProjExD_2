@@ -2,7 +2,7 @@ import os
 import sys
 import random
 import pygame as pg
-
+import time
 WIDTH, HEIGHT = 1100, 650
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -13,6 +13,30 @@ DELTA = {
     pg.K_RIGHT: (+5, 0)
 }
 
+def game_over(screen):
+    """ゲームオーバー画面を5秒表示する"""
+
+    blackout = pg.Surface((WIDTH, HEIGHT))
+    blackout.fill((0, 0, 0))
+    blackout.set_alpha(200)
+    font = pg.font.Font(None, 120)
+    text = font.render("Game Over", True, (255, 255, 255))
+    text_rct = text.get_rect(center=(WIDTH//2, HEIGHT//2))
+    cry_img = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 1.0)
+    offset = 290  
+
+    cry_left_rct = cry_img.get_rect(center=(text_rct.centerx - offset, text_rct.centery))
+    cry_right_rct = cry_img.get_rect(center=(text_rct.centerx + offset, text_rct.centery))
+
+    blackout.blit(text, text_rct)
+    blackout.blit(cry_img, cry_left_rct)
+    blackout.blit(cry_img, cry_right_rct)
+    
+    screen.blit(blackout, (0, 0))
+    pg.display.update()    
+    time.sleep(5)
+
+
 def check_bound(rct: pg.Rect):
     yoko = True
     tate = True
@@ -22,7 +46,6 @@ def check_bound(rct: pg.Rect):
         tate = False
     return yoko, tate
 
-
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -30,7 +53,6 @@ def main():
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
-
     
     bb_img = pg.Surface((20, 20))
     bb_img.set_colorkey((0, 0, 0))
@@ -50,7 +72,6 @@ def main():
                 return
 
         screen.blit(bg_img, [0, 0])
-
         
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
@@ -61,7 +82,6 @@ def main():
                 sum_mv[1] += delta[1]
 
         kk_rct.move_ip(sum_mv)
-
         
         yoko, tate = check_bound(kk_rct)
         if not yoko:
@@ -70,7 +90,6 @@ def main():
             kk_rct.move_ip(0, -sum_mv[1])
 
         screen.blit(kk_img, kk_rct)
-
         
         bb_rct.move_ip(vx, vy)
 
@@ -79,14 +98,12 @@ def main():
             vx *= -1
         if not tate:
             vy *= -1
-
         
         screen.blit(bb_img, bb_rct)
-
         
         if kk_rct.colliderect(bb_rct):
-            return  
-
+            game_over(screen)  
+            return 
         pg.display.update()
         tmr += 1
         clock.tick(50)
