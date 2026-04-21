@@ -107,6 +107,10 @@ def init_kk_images():
     return kk_imgs
 
 
+<<<<<<< HEAD
+=======
+#  爆弾の拡大と加速度
+>>>>>>> ed7c62b9f731de9bdce2abdd0194ea5cb7917b58
 def init_bomb_images():
     """
     爆弾のサイズ変化に対応した画像と加速度を生成する関数。
@@ -181,7 +185,11 @@ def main():
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")
 
+<<<<<<< HEAD
     # プレイヤー画像
+=======
+    # こうかとん辞書
+>>>>>>> ed7c62b9f731de9bdce2abdd0194ea5cb7917b58
     kk_imgs = init_kk_images()
     kk_rct = kk_imgs[(0, 0)].get_rect()
     kk_rct.center = 300, 200
