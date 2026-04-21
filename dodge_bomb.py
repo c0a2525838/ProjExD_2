@@ -230,8 +230,8 @@ def main():
 
         # 爆弾のサイズ更新
         bb_img = bb_imgs[idx]
-        bb_rct.width = bb_img.get_rect().width
-        bb_rct.height = bb_img.get_rect().height
+        center = bb_rct.center
+        bb_rct = bb_img.get_rect(center=center)
 
         bomb_vx, bomb_vy = chase_vector(bb_rct, kk_rct, (bomb_vx, bomb_vy))
 
