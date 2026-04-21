@@ -3,6 +3,7 @@ import sys
 import random
 import pygame as pg
 import time
+
 WIDTH, HEIGHT = 1100, 650
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -46,6 +47,21 @@ def check_bound(rct: pg.Rect):
         tate = False
     return yoko, tate
 
+
+def init_bomb_images():
+    """爆弾の大きさと加速度のリストを作成"""
+    bb_imgs = []
+    bb_accs = [a for a in range(1, 11)]  # 加速度 1〜10
+
+    for r in range(1, 11):  # 半径1〜10倍
+        bb_img = pg.Surface((20*r, 20*r))
+        bb_img.set_colorkey((0, 0, 0))
+        pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+        bb_imgs.append(bb_img)
+
+    return bb_imgs, bb_accs
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -54,10 +70,11 @@ def main():
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
     
-    bb_img = pg.Surface((20, 20))
-    bb_img.set_colorkey((0, 0, 0))
-    pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)
+    # 爆弾の画像リストと加速度リスト
+    bb_imgs, bb_accs = init_bomb_images()
 
+    # 初期爆弾
+    bb_img = bb_imgs[0]
     bb_rct = bb_img.get_rect()
     bb_rct.center = random.randint(0, WIDTH), random.randint(0, HEIGHT)
 
@@ -91,8 +108,22 @@ def main():
 
         screen.blit(kk_img, kk_rct)
         
-        bb_rct.move_ip(vx, vy)
+        # 時間に応じて爆弾の段階
+        idx = min(tmr // 500, 9)
 
+        # 加速
+        avx = vx * bb_accs[idx]
+        avy = vy * bb_accs[idx]
+
+        # 拡大
+        bb_img = bb_imgs[idx]
+        bb_rct.width  = bb_img.get_rect().width
+        bb_rct.height = bb_img.get_rect().height
+
+        # 移動
+        bb_rct.move_ip(avx, avy)
+
+        # 反射
         yoko, tate = check_bound(bb_rct)
         if not yoko:
             vx *= -1
@@ -102,11 +133,13 @@ def main():
         screen.blit(bb_img, bb_rct)
         
         if kk_rct.colliderect(bb_rct):
-            game_over(screen)  
-            return 
+            game_over(screen)
+            return
+
         pg.display.update()
         tmr += 1
         clock.tick(50)
+
 
 if __name__ == "__main__":
     pg.init()
