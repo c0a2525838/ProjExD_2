@@ -71,7 +71,7 @@ def init_kk_images():
     return kk_imgs
 
 
-#  爆弾の拡大と加速度リスト
+#  爆弾の拡大と加速度
 def init_bomb_images():
     bb_imgs = []
     bb_accs = [a for a in range(1, 11)]
@@ -112,7 +112,7 @@ def main():
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")
 
-    #  こうかとん辞書
+    # こうかとん辞書
     kk_imgs = init_kk_images()
     kk_rct = kk_imgs[(0, 0)].get_rect()
     kk_rct.center = 300, 200
